@@ -21,7 +21,7 @@
   // Set up a DB table for articles.
   Article.createTable = function() {
     webDB.execute(
-      'CREATE TABLE articles (id INTEGER PRIMARY KEY, title VARCHAR(255) NOT NULL, category VARCHAR(255), author VARCHAR(255) NOT NULL, authorUrl VARCHAR (255)), publishedOn DATETIME, body TEXT NOT NULL);', // TODO: What SQL command do we run here inside these quotes?
+      'CREATE TABLE IF NOT EXISTS articles (id INTEGER PRIMARY KEY, title VARCHAR(255) NOT NULL, author VARCHAR(255) NOT NULL, authorUrl VARCHAR (255), category VARCHAR(20), publishedOn DATETIME, body TEXT NOT NULL);', // TODO: What SQL command do we run here inside these quotes?
       function() {
         console.log('Successfully set up the articles table.');
       }
@@ -47,10 +47,10 @@
            1 - Use Article.loadAll to instanitate these rows,
            2 - Pass control to the view by invoking the next function that
                 was passed in to Article.fetchAll */
-        Article.loadAll();
+        Article.loadAll(rows);
         nextFunction();
       } else {
-        $.getJSON('/data/hackerIpsum.json', function(responseData) {
+        $.getJSON('data/hackerIpsum.json', function(responseData) {
           // Save each article from this JSON file, so we don't need to request it next time:
           responseData.forEach(function(obj) {
             var article = new Article(obj); // This will instantiate an article instance based on each article object from our JSON.
@@ -78,7 +78,7 @@
         {
           // TODO: Insert an article instance into the database:
           // NOTE: this method will be called elsewhere after we retrieve our JSON
-          'sql': 'INSERT INTO artcles (title, author, authorUrl, category, publishedOn, body) VALUES (?, ?, ?, ?, ?, ? );', // <----- complete our SQL command here, inside the quotes.
+          'sql': 'INSERT INTO articles (title, author, authorUrl, category, publishedOn, body) VALUES (?, ?, ?, ?, ?, ? );', // <----- complete our SQL command here, inside the quotes.
           'data': [this.title, this.author, this.authorUrl, this.category, this.publishedOn, this.body]
         }
       ]
@@ -92,7 +92,7 @@
           // TODO: Delete an article instance from the database based on its id:
           /* Note: this is an advanced admin option, so you will need to test
               out an individual query in the console */
-          'sql': '', // <--- complete the command here, inside the quotes;
+          'sql': 'DELETE FROM articles WHERE id= ?;', // <--- complete the command here, inside the quotes;
           'data': [this.id]
         }
       ]
@@ -104,7 +104,7 @@
       // TODO: Use correct SQL syntax to delete all records from the articles table.
       'DELETE ...;' // <----finish the command here, inside the quotes.
     );
-  };
+  };*/
 
   Article.allAuthors = function() {
     return Article.allArticles.map(function(article) {
@@ -145,5 +145,6 @@
   };
 
 // TODO: ensure that our table has been setup.
+  Article.createTable();
   module.Article = Article;
 })(window);
