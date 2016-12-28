@@ -42,22 +42,37 @@
         (most recent article first!), and then hand off control to the View.
       Otherwise (if the DB is empty) we need to retrieve the JSON and process it. */
 
-    webDB.execute('', function(rows) { // TODO: fill these quotes to query our table.
+    webDB.execute('SELECT COUNT(*) FROM articles;', function(rows) { // TODO: fill these quotes to query our table.
       if (rows.length) {
+
         /* TODO:
            1 - Use Article.loadAll to instanitate these rows,
            2 - Pass control to the view by invoking the next function that
                 was passed in to Article.fetchAll */
 
       } else {
+
         $.getJSON('/data/hackerIpsum.json', function(responseData) {
           // Save each article from this JSON file, so we don't need to request it next time:
           responseData.forEach(function(obj) {
-            var article = new Article(obj); // This will instantiate an article instance based on each article object from our JSON.
+            var article = new Article(obj);
+            Article.allArticles.push(article);
+            console.log('after article call');
+            // This will instantiate an article instance based on each article object from our JSON.
             /* TODO:
                1 - 'insert' the newly-instantiated article in the DB:
                 (hint: what can we call on this article instance?). */
-
+            webDB.execute(
+              [
+                {
+                  sql:'INSERT INTO articles (title, author, authorUrl, category, publishedOn, body) VALUES (?,?,?,?,?,?);',
+                  'data':[this.title, this.author, this.authorUrl, this.category, this.publishedOn, this.body]
+                }
+              ],
+            function(rows){
+              console.log('inserted a row ');
+            }
+          );
           });
           // Now get ALL the records out the DB, with their database IDs:
           webDB.execute('', function(rows) { // TODO: select our now full table
