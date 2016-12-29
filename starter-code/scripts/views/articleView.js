@@ -73,7 +73,8 @@
     articleView.handleMainNav();
     articleView.setTeasers();
   };
-  //TODO: uncomment me when ready!
-  //Article.fetchAll(articleView.renderIndexPage);
+  //TODO done: uncomment me when ready!
+  Article.fetchAll(articleView.renderIndexPage);
+  Article.truncateTable(); //added
   module.articleView = articleView;
 })(window);
