@@ -42,8 +42,7 @@
         (most recent article first!), and then hand off control to the View.
       Otherwise (if the DB is empty) we need to retrieve the JSON and process it. */
 
-    webDB.execute('SELECT * FROM articles ORDER BY publishedOn ASC', function(rows) { // TODO: fill these quotes to query our table.
-      console.log(rows);
+    webDB.execute('SELECT *, rowid FROM articles ORDER BY publishedOn ASC', function(rows) { // TODO: fill these quotes to query our table.
       if (rows.length) {
         /* TODO: DONE //
            1 - Use Article.loadAll to instanitate these rows,
@@ -57,7 +56,6 @@
 
           responseData.forEach(function(obj) {
             var article = new Article(obj); // This will instantiate an article instance based on each article object from our JSON.
-            console.log(article);
             /* TODO: DONE //
                1 - 'insert' the newly-instantiated article in the DB:
                 (hint: what can we call on this article instance?). */
@@ -65,7 +63,7 @@
             article.insertRecord();
           });
           // Now get ALL the records out the DB, with their database IDs:
-          webDB.execute('SELECT * FROM articles', function(rows) { // TODO: select our now full table
+          webDB.execute('SELECT *, rowid FROM articles', function(rows) { // TODO: select our now full table
             // TODO: DONE //
             // 1 - Use Article.loadAll to generate our rows,
             // 2 - Pass control to the view by calling the next function that was passed in to Article.fetchAll
@@ -94,11 +92,11 @@
     webDB.execute(
       [
         {
-          // TODO: Delete an article instance from the database based on its id:
+          // TODO: DONE// Delete an article instance from the database based on its id:
           /* Note: this is an advanced admin option, so you will need to test
               out an individual query in the console */
-          'sql': '', // <--- complete the command here, inside the quotes;
-          'data': [this.id]
+          'sql': 'DELETE FROM articles WHERE rowid = ?', // <--- complete the command here, inside the quotes;
+          'data': [this.rowid]
         }
       ]
     );
@@ -106,8 +104,8 @@
 
   Article.truncateTable = function() {
     webDB.execute(
-      // TODO: Use correct SQL syntax to delete all records from the articles table.
-      'DELETE ...;' // <----finish the command here, inside the quotes.
+      // TODO: DONE//  Use correct SQL syntax to delete all records from the articles table.
+      'DELETE FROM articles WHERE rowid > 0;' // <----finish the command here, inside the quotes.
     );
   };
 
