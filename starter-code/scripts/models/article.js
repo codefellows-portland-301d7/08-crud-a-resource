@@ -62,7 +62,7 @@
             Article.allArticles.push(article);
             console.log('after article call');
             // This will instantiate an article instance based on each article object from our JSON.
-            /* TODO:
+            /* TODO done:
                1 - 'insert' the newly-instantiated article in the DB:
                 (hint: what can we call on this article instance?). */
             article.insertRecord();
@@ -97,7 +97,7 @@
     webDB.execute(
       [
         {
-          // TODO: Insert an article instance into the database:
+          // TODO done: Insert an article instance into the database:
           // NOTE: this method will be called elsewhere after we retrieve our JSON
           'sql':'INSERT INTO articles (title, category, author, authorUrl, publishedOn, body) VALUES (?,?,?,?,?,?);',
           'data':[this.title, this.category, this.author, this.authorUrl, this.publishedOn, this.body]
@@ -165,7 +165,7 @@
     });
   };
 
-// TODO: ensure that our table has been setup.
+// TODO done: ensure that our table has been setup.
   Article.createTable();
   Article.fetchAll();
   module.Article = Article;
